@@ -1,0 +1,218 @@
+[
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "tips",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "publisher",
+                "type": "address"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "tipCode",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes",
+                "name": "tipMetaSha256Hash",
+                "type": "bytes"
+            },
+            {
+                "internalType": "bool",
+                "name": "isValid",
+                "type": "bool"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "publisher",
+                "type": "address"
+            }
+        ],
+        "name": "ApprovePublisher",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "publisher",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "bytes32",
+                "name": "tipCode",
+                "type": "bytes32"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "tipId",
+                "type": "uint256"
+            },
+            {
+                "indexed": true,
+                "internalType": "bytes32[]",
+                "name": "recipients",
+                "type": "bytes32[]"
+            }
+        ],
+        "name": "TipPublished",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "tipId",
+                "type": "uint256"
+            }
+        ],
+        "name": "TipVoided",
+        "type": "event"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_publisher",
+                "type": "address"
+            }
+        ],
+        "name": "approvePublisher",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "_tipCode",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes",
+                "name": "_tipMetaSha256Hash",
+                "type": "bytes"
+            },
+            {
+                "internalType": "bytes32[]",
+                "name": "_recipients",
+                "type": "bytes32[]"
+            }
+        ],
+        "name": "publishTip",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_tipId",
+                "type": "uint256"
+            }
+        ],
+        "name": "invalidateTip",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "getLastTipId",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_tipId",
+                "type": "uint256"
+            }
+        ],
+        "name": "getTip",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes",
+                "name": "",
+                "type": "bytes"
+            },
+            {
+                "internalType": "bytes32[]",
+                "name": "",
+                "type": "bytes32[]"
+            },
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    }
+]
