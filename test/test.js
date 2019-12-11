@@ -3,6 +3,8 @@
 const expect = require("chai").expect;
 const HintoSdk = require("../dist").HintoSdk;
 
+const { utils } = require("ethers");
+
 const { SHA256, enc } = require("crypto-js");
 
 describe("Hinto test", () => {
