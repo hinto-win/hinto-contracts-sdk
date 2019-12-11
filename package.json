@@ -1,5 +1,5 @@
 {
-  "name": "HintoTipsValidator",
+  "name": "hinto-sdk",
   "version": "1.0.0",
   "main": "index.js",
   "author": "Marcello Bardus",
@@ -11,21 +11,23 @@
     "openzeppelin-solidity": "^2.4.0",
     "truffle": "^5.1.3",
     "truffle-hdwallet-provider": "^1.0.17",
-    "typechain": "^1.0.3",
-    "typechain-target-ethers": "^1.0.3",
     "typescript": "^3.7.3"
   },
   "scripts": {
+    "postinstall": "yarn build:typechain",
     "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
-    "deploy:contracts": "truffle migrate --network development",
+    "deploy:contracts:dev": "truffle migrate --network development",
+    "deploy:contracts:test": "truffle migrate --network rinkeby",
     "build:contracts": "truffle build",
     "build:typechain": "typechain --target=ethers './build/contracts/*.json' --outDir=./typechain-build",
     "test": "mocha --timeout 20000000 --reporter spec"
   },
   "dependencies": {
     "crypto-js": "^3.1.9-1",
-    "ethers": "^4.0.40"
+    "ethers": "^4.0.40",
+    "typechain": "^1.0.3",
+    "typechain-target-ethers": "^1.0.3"
   }
 }

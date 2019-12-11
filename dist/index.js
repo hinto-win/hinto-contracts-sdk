@@ -58,12 +58,15 @@ class HintoSdk {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const tipData = yield this.contractInstance.getTip(tipId);
+                const recipients = tipData[3].map(e => {
+                    return utils_1.parseBytes32String(e);
+                });
                 return {
                     publisher: tipData[0],
-                    tipCode: tipData[1],
+                    tipCode: utils_1.parseBytes32String(tipData[1]),
                     tipMetadataHash: tipData[2],
-                    recipients: tipData[3],
-                    isValid: tipData[4]
+                    isValid: tipData[4],
+                    recipients
                 };
             }
             catch (err) {
