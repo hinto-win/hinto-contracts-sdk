@@ -18,7 +18,7 @@
     "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
-    "deploy:contracts:dev": "truffle migrate --network development",
+    "deploy:contracts:dev": "truffle migrate --network development --reset",
     "deploy:contracts:test": "truffle migrate --network rinkeby",
     "build:contracts": "truffle build",
     "build:typechain": "typechain --target=ethers './build/contracts/*.json' --outDir=./typechain-build",

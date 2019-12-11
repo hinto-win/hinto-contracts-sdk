@@ -21,11 +21,13 @@ describe("Hinto test", () => {
   let tipID;
 
   it("should deploy a tip", async () => {
-    tipID = await hintoSdk.publishTip(
+    const tip = await hintoSdk.publishTip(
       "MIL-JUV",
       "0x" + SHA256("0987").toString(enc.Hex),
       ["VIP"]
     );
+    tipID = tip.tipId;
+    const publishmentTxHash = tip.txHash;
   });
 
   it("should get the number of tips", async () => {

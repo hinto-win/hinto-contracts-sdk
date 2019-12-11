@@ -52,7 +52,7 @@ export class HintoSdk {
     tipCode: string,
     tipMetadataHash: string,
     recipients: string[]
-  ): Promise<number> {
+  ): Promise<{ tipId: number; txHash: string }> {
     if (!this.wallet) {
       throw new Error(
         "This method is avaliable only if the private key has been given in the constructor"
@@ -70,13 +70,16 @@ export class HintoSdk {
 
       const txReceipt = await tx.wait();
 
-      if (txReceipt.logs) {
+      if (txReceipt.logs && txReceipt.transactionHash) {
         const abiDecoded: [string, string, BigNumber] = new AbiCoder().decode(
           ["address", "bytes32", "uint"],
           txReceipt.logs[0].data
         );
 
-        return abiDecoded[2].toNumber();
+        return {
+          tipId: abiDecoded[2].toNumber(),
+          txHash: txReceipt.transactionHash
+        };
       }
 
       throw new Error("Could not publish tip");
