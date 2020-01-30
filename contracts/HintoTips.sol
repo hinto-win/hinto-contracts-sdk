@@ -1,12 +1,11 @@
 pragma solidity 0.5.10;
 
+import "../node_modules/openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
-contract HintoTips {
-    address owner;
+contract HintoTips is Ownable {
     mapping(address => bool) publishers;
-    uint tipsCount;
-    mapping(uint => Tip) public tips;
-
+    uint256 tipsCount;
+    mapping(uint256 => Tip) public tips;
 
     struct Tip {
         address publisher;
@@ -17,36 +16,36 @@ contract HintoTips {
     }
 
     event ApprovePublisher(address publisher);
+    event PublisherDisapproved(address publisher);
     event TipPublished(
         address publisher,
         bytes32 tipCode,
-        uint tipId,
+        uint256 tipId,
         bytes32[] indexed recipients
     );
-    event TipVoided(uint tipId);
-
-    modifier isOwner() {
-        require(msg.sender == owner, "Only the contract owner can call this method");
-        _;
-    }
+    event TipVoided(uint256 tipId);
 
     modifier isPublisher() {
-        require(publishers[msg.sender], "Only approved publishers can call this method");
+        require(
+            publishers[msg.sender],
+            "Only approved publishers can call this method"
+        );
         _;
     }
 
-    modifier tipExists(uint _tipId) {
+    modifier tipExists(uint256 _tipId) {
         require(tipsCount > _tipId, "Tip with the given id does not exist");
         _;
     }
 
-    constructor() public {
-        owner = msg.sender;
-    }
-
-    function approvePublisher(address _publisher) external isOwner() {
+    function approvePublisher(address _publisher) external onlyOwner() {
         publishers[_publisher] = true;
         emit ApprovePublisher(_publisher);
+    }
+
+    function disapprovePublisher(address _publisher) external onlyOwner() {
+        publishers[_publisher] = false;
+        emit PublisherDisapproved(_publisher);
     }
 
     function publishTip(
@@ -54,7 +53,6 @@ contract HintoTips {
         bytes32 _tipMetaSha256Hash,
         bytes32[] calldata _recipients
     ) external isPublisher() {
-
         Tip memory tip = Tip(
             msg.sender,
             _tipCode,
@@ -67,22 +65,25 @@ contract HintoTips {
         tipsCount++;
     }
 
-    function invalidateTip(uint _tipId) external tipExists(_tipId) {
-        require(msg.sender == owner || tips[_tipId].publisher == msg.sender, "Only the contract owner or the tip publisher can unvalid it");
+    function invalidateTip(uint256 _tipId) external tipExists(_tipId) {
+        require(
+            msg.sender == owner() || tips[_tipId].publisher == msg.sender,
+            "Only the contract owner or the tip publisher can unvalid it"
+        );
         tips[_tipId].isValid = false;
         emit TipVoided(_tipId);
     }
 
-    function getTipsCount() external view returns(uint) {
-        return tipsCount ;
+    function getTipsCount() external view returns (uint256) {
+        return tipsCount;
     }
 
-    function getTip(uint _tipId) external tipExists(_tipId) view returns(
-        address,
-        bytes32,
-        bytes32,
-        bytes32[] memory,
-        bool) {
+    function getTip(uint256 _tipId)
+        external
+        view
+        tipExists(_tipId)
+        returns (address, bytes32, bytes32, bytes32[] memory, bool)
+    {
         return (
             tips[_tipId].publisher,
             tips[_tipId].tipCode,
