@@ -14,11 +14,23 @@ declare const _exports: ({
     "type": string;
     anonymous?: undefined;
 } | {
-    "inputs": never[];
+    "inputs": {
+        "name": string;
+        "type": string;
+    }[];
     "payable": boolean;
     "stateMutability": string;
     "type": string;
     constant?: undefined;
+    name?: undefined;
+    outputs?: undefined;
+    anonymous?: undefined;
+} | {
+    "payable": boolean;
+    "stateMutability": string;
+    "type": string;
+    constant?: undefined;
+    inputs?: undefined;
     name?: undefined;
     outputs?: undefined;
     anonymous?: undefined;

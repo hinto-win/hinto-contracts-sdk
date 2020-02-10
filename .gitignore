@@ -1,4 +1,8 @@
 node_modules/
 build/
+
 .secret
-typechain-build/
+.infura
+.privateKeys
+
+src/typechain-build/

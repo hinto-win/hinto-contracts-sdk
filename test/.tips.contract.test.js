@@ -1,9 +1,6 @@
 "use strict";
 
-const expect = require("chai").expect;
-const HintoSdk = require("../dist").HintoSdk;
-
-const { utils } = require("ethers");
+const { HintoSdk } = require("../dist");
 
 const { SHA256, enc } = require("crypto-js");
 
