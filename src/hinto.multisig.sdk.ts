@@ -1,4 +1,4 @@
-import { providers, utils, Contract, Wallet, Event } from "ethers";
+import { providers, utils, Contract, Wallet, Event, ethers } from "ethers";
 
 import { MultiSigWallet } from "./typechain-build/MultiSigWallet";
 import { MultiSigWalletFactory } from "./typechain-build/MultiSigWalletFactory";
@@ -7,6 +7,7 @@ import { HintoTipsFactory } from "./typechain-build/HintoTipsFactory";
 
 import MultiSigABI from "./utils/multisig-abi.json";
 import { Arrayish, BigNumberish } from "ethers/utils";
+import { OnTransactionSubmissionConsumer } from "./types";
 
 export class HintoMultisigSdk {
   private wallet?: Wallet;
@@ -223,9 +224,44 @@ export class HintoMultisigSdk {
   }
 
   /**
+   *
+   * @param transactionId - multisig transaction id
+   * @returns list of addresses that confirmed the transaction
+   */
+  public async getTransactionConfirmations(
+    transactionId: number
+  ): Promise<string[]> {
+    return await this.contractInstance.getConfirmations(transactionId);
+  }
+
+  /**
    * @returns multisig address
    */
   public getMultisigAddress(): string {
     return this.multisigAddress;
+  }
+
+  /**
+   *
+   * @param transactiondId - multisig transaction id
+   * @returns transaction status
+   */
+  public async isTransactionConfirmed(
+    transactiondId: number
+  ): Promise<boolean> {
+    return await this.contractInstance.isConfirmed(transactiondId);
+  }
+
+  /**
+   *
+   * @param consumer - function to be executed on event detection
+   */
+  public async onTransactionSubmission(
+    consumer: OnTransactionSubmissionConsumer
+  ) {
+    this.contractInstance.on(
+      this.contractInstance.interface.events.Submission.name,
+      consumer
+    );
   }
 }

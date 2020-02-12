@@ -8,7 +8,10 @@ contract MultiSigWallet {
      */
     event Confirmation(address indexed sender, uint256 indexed transactionId);
     event Revocation(address indexed sender, uint256 indexed transactionId);
-    event Submission(uint256 indexed transactionId);
+    event Submission(
+        uint256 indexed transactionId,
+        address indexed submittedBy
+    );
     event Execution(uint256 indexed transactionId);
     event ExecutionFailure(uint256 indexed transactionId);
     event Deposit(address indexed sender, uint256 value);
@@ -297,7 +300,7 @@ contract MultiSigWallet {
             executed: false
         });
         transactionCount += 1;
-        emit Submission(transactionId);
+        emit Submission(transactionId, msg.sender);
     }
 
     /*
