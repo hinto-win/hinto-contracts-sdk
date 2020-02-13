@@ -1,6 +1,6 @@
 import { Event } from "ethers";
 import { Arrayish, BigNumberish } from "ethers/utils";
-import { OnTransactionSubmissionConsumer } from "./types";
+import { OnTransactionSubmissionConsumer, OnOwnerAdditionConsumer, OnOwnerRemovalConsumer } from "./types";
 export declare class HintoMultisigSdk {
     readonly providerUrl: string;
     readonly multisigAddress: string;
@@ -109,4 +109,6 @@ export declare class HintoMultisigSdk {
      * @param consumer - function to be executed on event detection
      */
     onTransactionSubmission(consumer: OnTransactionSubmissionConsumer): Promise<void>;
+    onOwnerAddition(consumer: OnOwnerAdditionConsumer): Promise<void>;
+    onOwnerRemoval(consumer: OnOwnerRemovalConsumer): Promise<void>;
 }

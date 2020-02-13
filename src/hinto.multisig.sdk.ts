@@ -7,7 +7,11 @@ import { HintoTipsFactory } from "./typechain-build/HintoTipsFactory";
 
 import MultiSigABI from "./utils/multisig-abi.json";
 import { Arrayish, BigNumberish } from "ethers/utils";
-import { OnTransactionSubmissionConsumer } from "./types";
+import {
+  OnTransactionSubmissionConsumer,
+  OnOwnerAdditionConsumer,
+  OnOwnerRemovalConsumer
+} from "./types";
 
 export class HintoMultisigSdk {
   private wallet?: Wallet;
@@ -261,6 +265,20 @@ export class HintoMultisigSdk {
   ) {
     this.contractInstance.on(
       this.contractInstance.interface.events.Submission.name,
+      consumer
+    );
+  }
+
+  public async onOwnerAddition(consumer: OnOwnerAdditionConsumer) {
+    this.contractInstance.on(
+      this.contractInstance.interface.events.OwnerAddition.name,
+      consumer
+    );
+  }
+
+  public async onOwnerRemoval(consumer: OnOwnerRemovalConsumer) {
+    this.contractInstance.on(
+      this.contractInstance.interface.events.OwnerRemoval.name,
       consumer
     );
   }

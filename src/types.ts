@@ -11,3 +11,9 @@ export interface Tip {
 export interface OnTransactionSubmissionConsumer extends Listener {
   (transactionId: number, submittedBy: string): Promise<void>;
 }
+
+export interface OnOwnerChangeConsumer extends Listener {
+  (owner: string): Promise<void>;
+}
+export interface OnOwnerRemovalConsumer extends OnOwnerChangeConsumer {}
+export interface OnOwnerAdditionConsumer extends OnOwnerChangeConsumer {}

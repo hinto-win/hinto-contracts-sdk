@@ -231,5 +231,15 @@ class HintoMultisigSdk {
             this.contractInstance.on(this.contractInstance.interface.events.Submission.name, consumer);
         });
     }
+    onOwnerAddition(consumer) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.contractInstance.on(this.contractInstance.interface.events.OwnerAddition.name, consumer);
+        });
+    }
+    onOwnerRemoval(consumer) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.contractInstance.on(this.contractInstance.interface.events.OwnerRemoval.name, consumer);
+        });
+    }
 }
 exports.HintoMultisigSdk = HintoMultisigSdk;
