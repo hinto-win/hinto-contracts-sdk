@@ -1,7 +1,7 @@
 {
   "name": "hinto-contracts-sdk",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/index.js",
   "author": "Marcello Bardus",
   "license": "MIT",
   "private": false,
