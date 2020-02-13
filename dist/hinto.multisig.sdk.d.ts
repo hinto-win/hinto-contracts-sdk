@@ -1,5 +1,6 @@
 import { Event } from "ethers";
 import { Arrayish, BigNumberish } from "ethers/utils";
+import { OnTransactionSubmissionConsumer } from "./types";
 export declare class HintoMultisigSdk {
     readonly providerUrl: string;
     readonly multisigAddress: string;
@@ -88,7 +89,24 @@ export declare class HintoMultisigSdk {
         events: Event[];
     } | undefined>;
     /**
+     *
+     * @param transactionId - multisig transaction id
+     * @returns list of addresses that confirmed the transaction
+     */
+    getTransactionConfirmations(transactionId: number): Promise<string[]>;
+    /**
      * @returns multisig address
      */
     getMultisigAddress(): string;
+    /**
+     *
+     * @param transactiondId - multisig transaction id
+     * @returns transaction status
+     */
+    isTransactionConfirmed(transactiondId: number): Promise<boolean>;
+    /**
+     *
+     * @param consumer - function to be executed on event detection
+     */
+    onTransactionSubmission(consumer: OnTransactionSubmissionConsumer): Promise<void>;
 }

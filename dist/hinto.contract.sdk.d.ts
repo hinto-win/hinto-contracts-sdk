@@ -1,3 +1,4 @@
+import { Arrayish } from "ethers/utils";
 import { Tip } from "./types";
 export declare class HintoSdk {
     readonly providerUrl: string;
@@ -11,6 +12,7 @@ export declare class HintoSdk {
         tipId: number;
         txHash: string;
     }>;
+    encodeTransaction(functionName: string, args: string[]): Promise<Arrayish>;
     getTipData(tipId: number): Promise<Tip>;
     getTipsCount(): Promise<number>;
 }

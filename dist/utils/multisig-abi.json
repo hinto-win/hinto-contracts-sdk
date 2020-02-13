@@ -194,6 +194,11 @@
                 "indexed": true,
                 "name": "transactionId",
                 "type": "uint256"
+            },
+            {
+                "indexed": true,
+                "name": "submittedBy",
+                "type": "address"
             }
         ],
         "name": "Submission",

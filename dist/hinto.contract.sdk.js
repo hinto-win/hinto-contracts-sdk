@@ -65,6 +65,16 @@ class HintoSdk {
             }
         });
     }
+    encodeTransaction(functionName, args) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                return this.contractInstance.interface.functions[functionName].encode(args);
+            }
+            catch (e) {
+                throw e;
+            }
+        });
+    }
     getTipData(tipId) {
         return __awaiter(this, void 0, void 0, function* () {
             try {

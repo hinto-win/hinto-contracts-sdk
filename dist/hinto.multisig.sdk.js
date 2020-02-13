@@ -197,10 +197,39 @@ class HintoMultisigSdk {
         });
     }
     /**
+     *
+     * @param transactionId - multisig transaction id
+     * @returns list of addresses that confirmed the transaction
+     */
+    getTransactionConfirmations(transactionId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.contractInstance.getConfirmations(transactionId);
+        });
+    }
+    /**
      * @returns multisig address
      */
     getMultisigAddress() {
         return this.multisigAddress;
+    }
+    /**
+     *
+     * @param transactiondId - multisig transaction id
+     * @returns transaction status
+     */
+    isTransactionConfirmed(transactiondId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.contractInstance.isConfirmed(transactiondId);
+        });
+    }
+    /**
+     *
+     * @param consumer - function to be executed on event detection
+     */
+    onTransactionSubmission(consumer) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.contractInstance.on(this.contractInstance.interface.events.Submission.name, consumer);
+        });
     }
 }
 exports.HintoMultisigSdk = HintoMultisigSdk;
