@@ -1,4 +1,12 @@
-import { providers, utils, Contract, Wallet, Event, ethers } from "ethers";
+import {
+  providers,
+  utils,
+  Contract,
+  Wallet,
+  Event,
+  ethers,
+  Signer
+} from "ethers";
 
 import { MultiSigWallet } from "./typechain-build/MultiSigWallet";
 import { MultiSigWalletFactory } from "./typechain-build/MultiSigWalletFactory";
@@ -12,31 +20,25 @@ import {
   OnOwnerAdditionConsumer,
   OnOwnerRemovalConsumer
 } from "./types";
+import { Provider } from "ethers/providers";
 
 export class HintoMultisigSdk {
-  private wallet?: Wallet;
   private contractInstance: MultiSigWallet;
 
   /**
    *
-   * @param providerUrl - JSON RPC provider url
+   * @param walletOrProvider - ethers Wallet or Provider instance
    * @param multisigAddress - multisig address
-   * @param privateKey - multisig owner's private key
    */
   constructor(
-    readonly providerUrl: string,
-    readonly multisigAddress: string,
-    readonly privateKey: string
+    private readonly signerOrProvider: Provider | Signer,
+    readonly multisigAddress: string
   ) {
-    if (privateKey) {
-      this.wallet = new Wallet(
-        privateKey,
-        new providers.JsonRpcProvider(providerUrl)
-      );
+    if (signerOrProvider instanceof Signer) {
       this.contractInstance = new Contract(
         multisigAddress,
         MultiSigABI,
-        this.wallet
+        this.signerOrProvider
       ) as MultiSigWallet;
       return;
     }
@@ -44,8 +46,49 @@ export class HintoMultisigSdk {
     this.contractInstance = new Contract(
       multisigAddress,
       JSON.stringify(MultiSigABI),
-      new providers.JsonRpcProvider(providerUrl)
+      signerOrProvider
     ) as MultiSigWallet;
+  }
+
+  /**
+   *
+   * @param providerUrl - JSON RPC provider url
+   * @param privateKey - multisig owner's private key
+   * @param multisigAddress - multisig address
+   */
+  static initializeWithPrivateKeyAndProviderUrl(
+    providerUrl: string,
+    privateKey: string,
+    multisigAddress: string
+  ): HintoMultisigSdk {
+    const wallet = new Wallet(
+      privateKey,
+      new providers.JsonRpcProvider(providerUrl)
+    );
+    return new HintoMultisigSdk(wallet, multisigAddress);
+  }
+
+  /**
+   * @param providerUrl - JSON RPC provider url
+   * @param multisigAddress - multisig address
+   */
+  static initializeWithProviderUrl(
+    providerUrl: string,
+    multisigAddress: string
+  ): HintoMultisigSdk {
+    const provider = new providers.JsonRpcProvider(providerUrl);
+    return new HintoMultisigSdk(provider, multisigAddress);
+  }
+
+  /**
+   * @param provider - Injected web3 provider
+   * @param multisigAddress - multisig address
+   */
+  static initializeWithInjectedWeb3(
+    provider: providers.Web3Provider,
+    multisigAddress: string
+  ): HintoMultisigSdk {
+    return new HintoMultisigSdk(provider.getSigner(), multisigAddress);
   }
 
   /**
@@ -63,17 +106,18 @@ export class HintoMultisigSdk {
     confirmationsRequired: number
   ): Promise<HintoMultisigSdk> {
     try {
-      const multisigInstance = await new MultiSigWalletFactory(
-        new Wallet(privateKey, new providers.JsonRpcProvider(providerUrl))
-      ).deploy(owners, confirmationsRequired);
+      const wallet = new Wallet(
+        privateKey,
+        new providers.JsonRpcProvider(providerUrl)
+      );
+      const multisigInstance = await new MultiSigWalletFactory(wallet).deploy(
+        owners,
+        confirmationsRequired
+      );
 
       await multisigInstance.deployed();
 
-      return new HintoMultisigSdk(
-        providerUrl,
-        multisigInstance.address,
-        privateKey
-      );
+      return new HintoMultisigSdk(wallet, multisigInstance.address);
     } catch (err) {
       throw err;
     }
@@ -83,11 +127,16 @@ export class HintoMultisigSdk {
    * @returns address of the contract that's gonna be deployed
    */
   public async computeContractAddressToBeDeployed(): Promise<string> {
-    const nonce = await this.wallet?.provider.getTransactionCount(
+    if (!(this.signerOrProvider instanceof Signer)) {
+      throw new Error(
+        "Only a wallet like instance of HintoSdk can execute write operations on the chain"
+      );
+    }
+    const nonce = await this.signerOrProvider?.provider!.getTransactionCount(
       this.multisigAddress
     );
     const address = utils.getContractAddress({
-      from: this.wallet!.address,
+      from: await this.signerOrProvider!.getAddress(),
       nonce: nonce!
     });
     return address;

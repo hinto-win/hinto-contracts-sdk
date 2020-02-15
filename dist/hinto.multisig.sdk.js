@@ -19,20 +19,42 @@ const multisig_abi_json_1 = __importDefault(require("./utils/multisig-abi.json")
 class HintoMultisigSdk {
     /**
      *
-     * @param providerUrl - JSON RPC provider url
+     * @param walletOrProvider - ethers Wallet or Provider instance
      * @param multisigAddress - multisig address
-     * @param privateKey - multisig owner's private key
      */
-    constructor(providerUrl, multisigAddress, privateKey) {
-        this.providerUrl = providerUrl;
+    constructor(signerOrProvider, multisigAddress) {
+        this.signerOrProvider = signerOrProvider;
         this.multisigAddress = multisigAddress;
-        this.privateKey = privateKey;
-        if (privateKey) {
-            this.wallet = new ethers_1.Wallet(privateKey, new ethers_1.providers.JsonRpcProvider(providerUrl));
-            this.contractInstance = new ethers_1.Contract(multisigAddress, multisig_abi_json_1.default, this.wallet);
+        if (signerOrProvider instanceof ethers_1.Signer) {
+            this.contractInstance = new ethers_1.Contract(multisigAddress, multisig_abi_json_1.default, this.signerOrProvider);
             return;
         }
-        this.contractInstance = new ethers_1.Contract(multisigAddress, JSON.stringify(multisig_abi_json_1.default), new ethers_1.providers.JsonRpcProvider(providerUrl));
+        this.contractInstance = new ethers_1.Contract(multisigAddress, JSON.stringify(multisig_abi_json_1.default), signerOrProvider);
+    }
+    /**
+     *
+     * @param providerUrl - JSON RPC provider url
+     * @param privateKey - multisig owner's private key
+     * @param multisigAddress - multisig address
+     */
+    static initializeWithPrivateKeyAndProviderUrl(providerUrl, privateKey, multisigAddress) {
+        const wallet = new ethers_1.Wallet(privateKey, new ethers_1.providers.JsonRpcProvider(providerUrl));
+        return new HintoMultisigSdk(wallet, multisigAddress);
+    }
+    /**
+     * @param providerUrl - JSON RPC provider url
+     * @param multisigAddress - multisig address
+     */
+    static initializeWithProviderUrl(providerUrl, multisigAddress) {
+        const provider = new ethers_1.providers.JsonRpcProvider(providerUrl);
+        return new HintoMultisigSdk(provider, multisigAddress);
+    }
+    /**
+     * @param provider - Injected web3 provider
+     * @param multisigAddress - multisig address
+     */
+    static initializeWithInjectedWeb3(provider, multisigAddress) {
+        return new HintoMultisigSdk(provider.getSigner(), multisigAddress);
     }
     /**
      *
@@ -45,9 +67,10 @@ class HintoMultisigSdk {
     static deployMultisig(providerUrl, privateKey, owners, confirmationsRequired) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const multisigInstance = yield new MultiSigWalletFactory_1.MultiSigWalletFactory(new ethers_1.Wallet(privateKey, new ethers_1.providers.JsonRpcProvider(providerUrl))).deploy(owners, confirmationsRequired);
+                const wallet = new ethers_1.Wallet(privateKey, new ethers_1.providers.JsonRpcProvider(providerUrl));
+                const multisigInstance = yield new MultiSigWalletFactory_1.MultiSigWalletFactory(wallet).deploy(owners, confirmationsRequired);
                 yield multisigInstance.deployed();
-                return new HintoMultisigSdk(providerUrl, multisigInstance.address, privateKey);
+                return new HintoMultisigSdk(wallet, multisigInstance.address);
             }
             catch (err) {
                 throw err;
@@ -60,9 +83,12 @@ class HintoMultisigSdk {
     computeContractAddressToBeDeployed() {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            const nonce = yield ((_a = this.wallet) === null || _a === void 0 ? void 0 : _a.provider.getTransactionCount(this.multisigAddress));
+            if (!(this.signerOrProvider instanceof ethers_1.Signer)) {
+                throw new Error("Only a wallet like instance of HintoSdk can execute write operations on the chain");
+            }
+            const nonce = yield ((_a = this.signerOrProvider) === null || _a === void 0 ? void 0 : _a.provider).getTransactionCount(this.multisigAddress);
             const address = ethers_1.utils.getContractAddress({
-                from: this.wallet.address,
+                from: yield this.signerOrProvider.getAddress(),
                 nonce: nonce
             });
             return address;

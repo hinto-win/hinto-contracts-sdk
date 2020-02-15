@@ -1,19 +1,34 @@
-import { Event } from "ethers";
+import { providers, Event, Signer } from "ethers";
 import { Arrayish, BigNumberish } from "ethers/utils";
 import { OnTransactionSubmissionConsumer, OnOwnerAdditionConsumer, OnOwnerRemovalConsumer } from "./types";
+import { Provider } from "ethers/providers";
 export declare class HintoMultisigSdk {
-    readonly providerUrl: string;
+    private readonly signerOrProvider;
     readonly multisigAddress: string;
-    readonly privateKey: string;
-    private wallet?;
     private contractInstance;
     /**
      *
+     * @param walletOrProvider - ethers Wallet or Provider instance
+     * @param multisigAddress - multisig address
+     */
+    constructor(signerOrProvider: Provider | Signer, multisigAddress: string);
+    /**
+     *
+     * @param providerUrl - JSON RPC provider url
+     * @param privateKey - multisig owner's private key
+     * @param multisigAddress - multisig address
+     */
+    static initializeWithPrivateKeyAndProviderUrl(providerUrl: string, privateKey: string, multisigAddress: string): HintoMultisigSdk;
+    /**
      * @param providerUrl - JSON RPC provider url
      * @param multisigAddress - multisig address
-     * @param privateKey - multisig owner's private key
      */
-    constructor(providerUrl: string, multisigAddress: string, privateKey: string);
+    static initializeWithProviderUrl(providerUrl: string, multisigAddress: string): HintoMultisigSdk;
+    /**
+     * @param provider - Injected web3 provider
+     * @param multisigAddress - multisig address
+     */
+    static initializeWithInjectedWeb3(provider: providers.Web3Provider, multisigAddress: string): HintoMultisigSdk;
     /**
      *
      * @param providerUrl - JSON RPC provider url
