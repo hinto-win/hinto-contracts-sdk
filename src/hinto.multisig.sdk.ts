@@ -256,6 +256,16 @@ export class HintoMultisigSdk {
     return await this.contractInstance.isConfirmed(transactiondId);
   }
 
+  public async getTransactionsCount(): Promise<number> {
+    return (
+      await this.contractInstance.getTransactionCount(true, true)
+    ).toNumber();
+  }
+
+  public async isTransactionExecuted(transactionId: number): Promise<boolean> {
+    return (await this.contractInstance.transactions(transactionId)).executed;
+  }
+
   /**
    *
    * @param consumer - function to be executed on event detection

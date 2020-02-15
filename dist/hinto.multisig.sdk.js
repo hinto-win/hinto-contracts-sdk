@@ -222,6 +222,16 @@ class HintoMultisigSdk {
             return yield this.contractInstance.isConfirmed(transactiondId);
         });
     }
+    getTransactionsCount() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.contractInstance.getTransactionCount(true, true)).toNumber();
+        });
+    }
+    isTransactionExecuted(transactionId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.contractInstance.transactions(transactionId)).executed;
+        });
+    }
     /**
      *
      * @param consumer - function to be executed on event detection

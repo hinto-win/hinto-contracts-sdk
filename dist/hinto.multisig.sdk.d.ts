@@ -104,6 +104,8 @@ export declare class HintoMultisigSdk {
      * @returns transaction status
      */
     isTransactionConfirmed(transactiondId: number): Promise<boolean>;
+    getTransactionsCount(): Promise<number>;
+    isTransactionExecuted(transactionId: number): Promise<boolean>;
     /**
      *
      * @param consumer - function to be executed on event detection
