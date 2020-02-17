@@ -79,6 +79,12 @@ export declare class HintoMultisigSdk {
      * @returns confirmations required by the multisig to execute a transaction
      */
     getRequiredConfirmations(): Promise<number>;
+    getTransactionDetails(transactionID: number): Promise<{
+        destination: string;
+        executed: boolean;
+        data: string;
+        value: string;
+    }>;
     /**
      *
      * @param transactionId - multisig transaction id

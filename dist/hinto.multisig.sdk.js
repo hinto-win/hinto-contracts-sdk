@@ -168,6 +168,17 @@ class HintoMultisigSdk {
             return (yield this.contractInstance.required()).toNumber();
         });
     }
+    getTransactionDetails(transactionID) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const details = yield this.contractInstance.transactions(transactionID);
+            return {
+                destination: details.destination,
+                executed: details.executed,
+                data: details.data,
+                value: details.data
+            };
+        });
+    }
     /**
      *
      * @param transactionId - multisig transaction id
