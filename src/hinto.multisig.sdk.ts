@@ -213,6 +213,23 @@ export class HintoMultisigSdk {
     return (await this.contractInstance.required()).toNumber();
   }
 
+  public async getTransactionDetails(
+    transactionID: number
+  ): Promise<{
+    destination: string;
+    executed: boolean;
+    data: string;
+    value: string;
+  }> {
+    const details = await this.contractInstance.transactions(transactionID);
+    return {
+      destination: details.destination,
+      executed: details.executed,
+      data: details.data,
+      value: details.data
+    };
+  }
+
   /**
    *
    * @param transactionId - multisig transaction id
