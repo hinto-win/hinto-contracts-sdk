@@ -6,7 +6,7 @@ import {
   AbiCoder,
   BigNumber,
   parseBytes32String,
-  Arrayish
+  Arrayish,
 } from "ethers/utils";
 import { Tip } from "./types";
 
@@ -68,10 +68,12 @@ export class HintoSdk {
       const tx = await this.contractInstance.publishTip(
         utils.formatBytes32String(tipCode),
         tipMetadataHash,
-        recipients.map(e => {
+        recipients.map((e) => {
           return utils.formatBytes32String(e);
         })
       );
+
+      tx.gasLimit = new BigNumber(1.5).mul(tx.gasLimit);
 
       const txReceipt = await tx.wait();
 
@@ -83,7 +85,7 @@ export class HintoSdk {
 
         return {
           tipId: abiDecoded[2].toNumber(),
-          txHash: txReceipt.transactionHash
+          txHash: txReceipt.transactionHash,
         };
       }
 
@@ -110,7 +112,7 @@ export class HintoSdk {
     try {
       const tipData = await this.contractInstance.getTip(tipId);
 
-      const recipients = tipData[3].map(e => {
+      const recipients = tipData[3].map((e) => {
         return parseBytes32String(e);
       });
 
@@ -119,7 +121,7 @@ export class HintoSdk {
         tipCode: parseBytes32String(tipData[1]),
         tipMetadataHash: tipData[2],
         isValid: tipData[4],
-        recipients
+        recipients,
       };
     } catch (err) {
       throw err;

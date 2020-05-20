@@ -47,15 +47,16 @@ class HintoSdk {
                 throw new Error("This method is avaliable only if the private key has been given in the constructor");
             }
             try {
-                const tx = yield this.contractInstance.publishTip(ethers_1.utils.formatBytes32String(tipCode), tipMetadataHash, recipients.map(e => {
+                const tx = yield this.contractInstance.publishTip(ethers_1.utils.formatBytes32String(tipCode), tipMetadataHash, recipients.map((e) => {
                     return ethers_1.utils.formatBytes32String(e);
                 }));
+                tx.gasLimit = new utils_1.BigNumber(1.5).mul(tx.gasLimit);
                 const txReceipt = yield tx.wait();
                 if (txReceipt.logs && txReceipt.transactionHash) {
                     const abiDecoded = new utils_1.AbiCoder().decode(["address", "bytes32", "uint"], txReceipt.logs[0].data);
                     return {
                         tipId: abiDecoded[2].toNumber(),
-                        txHash: txReceipt.transactionHash
+                        txHash: txReceipt.transactionHash,
                     };
                 }
                 throw new Error("Could not publish tip");
@@ -79,7 +80,7 @@ class HintoSdk {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const tipData = yield this.contractInstance.getTip(tipId);
-                const recipients = tipData[3].map(e => {
+                const recipients = tipData[3].map((e) => {
                     return utils_1.parseBytes32String(e);
                 });
                 return {
@@ -87,7 +88,7 @@ class HintoSdk {
                     tipCode: utils_1.parseBytes32String(tipData[1]),
                     tipMetadataHash: tipData[2],
                     isValid: tipData[4],
-                    recipients
+                    recipients,
                 };
             }
             catch (err) {
