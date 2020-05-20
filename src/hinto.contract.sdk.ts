@@ -73,8 +73,6 @@ export class HintoSdk {
         })
       );
 
-      tx.gasLimit = new BigNumber(1.5).mul(tx.gasLimit);
-
       const txReceipt = await tx.wait();
 
       if (txReceipt.logs && txReceipt.transactionHash) {

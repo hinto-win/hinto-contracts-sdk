@@ -47,10 +47,13 @@ class HintoSdk {
                 throw new Error("This method is avaliable only if the private key has been given in the constructor");
             }
             try {
+                console.log(recipients.map((e) => {
+                    return ethers_1.utils.formatBytes32String(e);
+                }));
                 const tx = yield this.contractInstance.publishTip(ethers_1.utils.formatBytes32String(tipCode), tipMetadataHash, recipients.map((e) => {
                     return ethers_1.utils.formatBytes32String(e);
                 }));
-                tx.gasLimit = new utils_1.BigNumber(1.5).mul(tx.gasLimit);
+                console.log(tx);
                 const txReceipt = yield tx.wait();
                 if (txReceipt.logs && txReceipt.transactionHash) {
                     const abiDecoded = new utils_1.AbiCoder().decode(["address", "bytes32", "uint"], txReceipt.logs[0].data);

@@ -3,12 +3,12 @@
 /* tslint:disable */
 Object.defineProperty(exports, "__esModule", { value: true });
 const ethers_1 = require("ethers");
-class ERC20DetailedFactory {
+class Erc20DetailedFactory {
     static connect(address, signerOrProvider) {
         return new ethers_1.Contract(address, _abi, signerOrProvider);
     }
 }
-exports.ERC20DetailedFactory = ERC20DetailedFactory;
+exports.Erc20DetailedFactory = Erc20DetailedFactory;
 const _abi = [
     {
         constant: false,

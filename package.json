@@ -21,13 +21,13 @@
     "deploy:contracts:dev": "truffle migrate --network development --reset",
     "deploy:contracts:test": "truffle migrate --network rinkeby",
     "build:contracts": "truffle build",
-    "build:typechain": "typechain --target=ethers './build/contracts/*.json' --outDir=./src/typechain-build",
+    "build:typechain": "typechain --target=ethers-v4 './build/contracts/*.json' --outDir=./src/typechain-build",
     "test": "mocha --timeout 20000000 --reporter spec"
   },
   "dependencies": {
+    "@typechain/ethers-v4": "^1.0.0",
     "crypto-js": "^3.1.9-1",
     "ethers": "^4.0.40",
-    "typechain": "^1.0.3",
-    "typechain-target-ethers": "^1.0.3"
+    "typechain": "^2.0.0"
   }
 }

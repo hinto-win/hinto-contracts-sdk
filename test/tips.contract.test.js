@@ -15,8 +15,6 @@ describe("Hinto test", () => {
     const abiEncoded = await hintoSdk.encodeTransaction("approvePublisher", [
       "0x91Fa9E366c4942241327081ec9faC73e409EE218",
     ]);
-
-    console.log(abiEncoded);
   });
 
   it("should approve a publisher", async () => {

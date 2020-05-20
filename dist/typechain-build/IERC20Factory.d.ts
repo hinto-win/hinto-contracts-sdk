@@ -1,6 +1,6 @@
 import { Signer } from "ethers";
 import { Provider } from "ethers/providers";
-import { IERC20 } from "./IERC20";
-export declare class IERC20Factory {
-    static connect(address: string, signerOrProvider: Signer | Provider): IERC20;
+import { Ierc20 } from "./Ierc20";
+export declare class Ierc20Factory {
+    static connect(address: string, signerOrProvider: Signer | Provider): Ierc20;
 }

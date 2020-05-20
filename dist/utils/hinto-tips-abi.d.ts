@@ -14,15 +14,6 @@ declare const _exports: ({
     "type": string;
     anonymous?: undefined;
 } | {
-    "inputs": never[];
-    "payable": boolean;
-    "stateMutability": string;
-    "type": string;
-    constant?: undefined;
-    name?: undefined;
-    outputs?: undefined;
-    anonymous?: undefined;
-} | {
     "anonymous": boolean;
     "inputs": {
         "indexed": boolean;
