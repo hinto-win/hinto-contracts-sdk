@@ -6,6 +6,7 @@ export declare class HintoSdk {
     readonly privateKey?: string | undefined;
     private wallet?;
     private contractInstance;
+    private unconfirmedTipsPublishmentCount;
     constructor(providerUrl: string, contractAddress: string, privateKey?: string | undefined);
     approvePublisher(publisher: string): Promise<void>;
     publishTip(tipCode: string, tipMetadataHash: string, recipients: string[]): Promise<{

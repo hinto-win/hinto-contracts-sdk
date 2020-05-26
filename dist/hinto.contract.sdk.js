@@ -20,6 +20,7 @@ class HintoSdk {
         this.providerUrl = providerUrl;
         this.contractAddress = contractAddress;
         this.privateKey = privateKey;
+        this.unconfirmedTipsPublishmentCount = 0;
         if (privateKey) {
             this.wallet = new ethers_1.Wallet(privateKey, new ethers_1.providers.JsonRpcProvider(providerUrl));
             this.contractInstance = new ethers_1.Contract(contractAddress, hinto_tips_abi_json_1.default, this.wallet);
@@ -51,8 +52,13 @@ class HintoSdk {
                 const tx = yield this.contractInstance.publishTip(ethers_1.utils.formatBytes32String(tipCode), tipMetadataHash, recipients.map((e) => {
                     return ethers_1.utils.formatBytes32String(e);
                 }));
+                tx.wait().then((txReceipt) => {
+                    if (txReceipt) {
+                        this.unconfirmedTipsPublishmentCount--;
+                    }
+                });
                 return {
-                    tipId: tipsCounter.toNumber(),
+                    tipId: tipsCounter.toNumber() + this.unconfirmedTipsPublishmentCount++,
                     txHash: tx.hash,
                 };
             }

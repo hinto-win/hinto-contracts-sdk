@@ -9,6 +9,8 @@ export class HintoSdk {
   private wallet?: Wallet;
   private contractInstance: HintoTips;
 
+  private unconfirmedTipsPublishmentCount = 0;
+
   constructor(
     readonly providerUrl: string,
     readonly contractAddress: string,
@@ -70,8 +72,14 @@ export class HintoSdk {
         })
       );
 
+      tx.wait().then((txReceipt) => {
+        if (txReceipt) {
+          this.unconfirmedTipsPublishmentCount--;
+        }
+      });
+
       return {
-        tipId: tipsCounter.toNumber(),
+        tipId: tipsCounter.toNumber() + this.unconfirmedTipsPublishmentCount++,
         txHash: tx.hash!,
       };
     } catch (err) {
