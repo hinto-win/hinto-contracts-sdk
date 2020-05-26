@@ -47,22 +47,14 @@ class HintoSdk {
                 throw new Error("This method is avaliable only if the private key has been given in the constructor");
             }
             try {
-                console.log(recipients.map((e) => {
-                    return ethers_1.utils.formatBytes32String(e);
-                }));
+                const tipsCounter = yield this.contractInstance.getTipsCount();
                 const tx = yield this.contractInstance.publishTip(ethers_1.utils.formatBytes32String(tipCode), tipMetadataHash, recipients.map((e) => {
                     return ethers_1.utils.formatBytes32String(e);
                 }));
-                console.log(tx);
-                const txReceipt = yield tx.wait();
-                if (txReceipt.logs && txReceipt.transactionHash) {
-                    const abiDecoded = new utils_1.AbiCoder().decode(["address", "bytes32", "uint"], txReceipt.logs[0].data);
-                    return {
-                        tipId: abiDecoded[2].toNumber(),
-                        txHash: txReceipt.transactionHash,
-                    };
-                }
-                throw new Error("Could not publish tip");
+                return {
+                    tipId: tipsCounter.toNumber(),
+                    txHash: tx.hash,
+                };
             }
             catch (err) {
                 throw err;

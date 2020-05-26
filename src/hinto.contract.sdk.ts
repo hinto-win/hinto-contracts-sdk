@@ -2,12 +2,7 @@ import { Wallet, providers, Contract, utils } from "ethers";
 import { HintoTips } from "./typechain-build/HintoTips";
 
 import HintoTipsAbi from "./utils/hinto-tips-abi.json";
-import {
-  AbiCoder,
-  BigNumber,
-  parseBytes32String,
-  Arrayish,
-} from "ethers/utils";
+import { parseBytes32String, Arrayish } from "ethers/utils";
 import { Tip } from "./types";
 
 export class HintoSdk {
@@ -65,6 +60,8 @@ export class HintoSdk {
     }
 
     try {
+      const tipsCounter = await this.contractInstance.getTipsCount();
+
       const tx = await this.contractInstance.publishTip(
         utils.formatBytes32String(tipCode),
         tipMetadataHash,
@@ -73,21 +70,10 @@ export class HintoSdk {
         })
       );
 
-      const txReceipt = await tx.wait();
-
-      if (txReceipt.logs && txReceipt.transactionHash) {
-        const abiDecoded: [string, string, BigNumber] = new AbiCoder().decode(
-          ["address", "bytes32", "uint"],
-          txReceipt.logs[0].data
-        );
-
-        return {
-          tipId: abiDecoded[2].toNumber(),
-          txHash: txReceipt.transactionHash,
-        };
-      }
-
-      throw new Error("Could not publish tip");
+      return {
+        tipId: tipsCounter.toNumber(),
+        txHash: tx.hash!,
+      };
     } catch (err) {
       throw err;
     }

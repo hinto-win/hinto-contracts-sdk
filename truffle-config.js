@@ -13,7 +13,7 @@ module.exports = {
     development: {
       host: "127.0.0.1", // Localhost (default: none)
       port: 8545, // Standard Ethereum port (default: none)
-      network_id: "*" // Any network (default: none)
+      network_id: "*", // Any network (default: none)
     },
     rinkeby: {
       provider: () =>
@@ -24,8 +24,12 @@ module.exports = {
       network_id: 4, // Ropsten's id
       confirmations: 2, // # of confs to wait between deployments. (default: 0)
       timeoutBlocks: 200, // # of blocks before a deployment times out  (minimum/default: 50)
-      skipDryRun: true // Skip dry run before migrations? (default: false for public nets )
-    }
+      skipDryRun: true, // Skip dry run before migrations? (default: false for public nets )
+    },
+    poa: {
+      provider: () =>
+        new HDWalletProvider(mnemonic, `https://core.poa.network`),
+    },
   },
   mocha: {
     // timeout: 100000
@@ -38,10 +42,10 @@ module.exports = {
       settings: {
         optimizer: {
           enabled: false,
-          runs: 200
+          runs: 200,
         },
-        evmVersion: "byzantium"
-      }
-    }
-  }
+        evmVersion: "byzantium",
+      },
+    },
+  },
 };
