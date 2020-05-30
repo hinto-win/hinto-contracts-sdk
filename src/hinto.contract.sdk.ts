@@ -43,7 +43,9 @@ export class HintoSdk {
       );
     }
     try {
-      const tx = await this.contractInstance.approvePublisher(publisher);
+      const tx = await this.contractInstance.approvePublisher(publisher, {
+        gasPrice: utils.bigNumberify(1000000000),
+      });
       await tx.wait();
     } catch (err) {
       throw err;
@@ -69,7 +71,8 @@ export class HintoSdk {
         tipMetadataHash,
         recipients.map((e) => {
           return utils.formatBytes32String(e);
-        })
+        }),
+        { gasPrice: utils.bigNumberify(1000000000) }
       );
 
       tx.wait().then((txReceipt) => {

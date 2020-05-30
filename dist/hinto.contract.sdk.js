@@ -34,7 +34,9 @@ class HintoSdk {
                 throw new Error("This method is avaliable only if the private key has been given in the constructor");
             }
             try {
-                const tx = yield this.contractInstance.approvePublisher(publisher);
+                const tx = yield this.contractInstance.approvePublisher(publisher, {
+                    gasPrice: ethers_1.utils.bigNumberify(1000000000),
+                });
                 yield tx.wait();
             }
             catch (err) {
@@ -51,7 +53,7 @@ class HintoSdk {
                 const tipsCounter = yield this.contractInstance.getTipsCount();
                 const tx = yield this.contractInstance.publishTip(ethers_1.utils.formatBytes32String(tipCode), tipMetadataHash, recipients.map((e) => {
                     return ethers_1.utils.formatBytes32String(e);
-                }));
+                }), { gasPrice: ethers_1.utils.bigNumberify(1000000000) });
                 tx.wait().then((txReceipt) => {
                     if (txReceipt) {
                         this.unconfirmedTipsPublishmentCount--;
