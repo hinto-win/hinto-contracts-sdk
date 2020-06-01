@@ -81,11 +81,11 @@ export class HintoSdk {
         { gasPrice }
       );
 
-      await tx.wait();
+      const receipt = await tx.wait();
 
       return {
         tipId: tipsCounter.toNumber() + this.unconfirmedTipsPublishmentCount++,
-        txHash: tx.hash!,
+        txHash: receipt.transactionHash!,
       };
     } catch (err) {
       throw err;
