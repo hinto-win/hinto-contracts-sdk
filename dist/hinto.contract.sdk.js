@@ -51,14 +51,14 @@ class HintoSdk {
             }
             try {
                 const tipsCounter = yield this.contractInstance.getTipsCount();
+                let gasPrice = yield this.wallet.provider.getGasPrice();
+                if (gasPrice.lt(ethers_1.utils.bigNumberify(2000000000))) {
+                    gasPrice = ethers_1.utils.bigNumberify(2000000000);
+                }
                 const tx = yield this.contractInstance.publishTip(ethers_1.utils.formatBytes32String(tipCode), tipMetadataHash, recipients.map((e) => {
                     return ethers_1.utils.formatBytes32String(e);
-                }), { gasPrice: ethers_1.utils.bigNumberify(1000000000) });
-                tx.wait().then((txReceipt) => {
-                    if (txReceipt) {
-                        this.unconfirmedTipsPublishmentCount--;
-                    }
-                });
+                }), { gasPrice });
+                yield tx.wait();
                 return {
                     tipId: tipsCounter.toNumber() + this.unconfirmedTipsPublishmentCount++,
                     txHash: tx.hash,

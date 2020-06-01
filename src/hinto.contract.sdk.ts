@@ -66,20 +66,22 @@ export class HintoSdk {
     try {
       const tipsCounter = await this.contractInstance.getTipsCount();
 
+      let gasPrice = await this.wallet.provider.getGasPrice();
+
+      if (gasPrice.lt(utils.bigNumberify(2000000000))) {
+        gasPrice = utils.bigNumberify(2000000000);
+      }
+
       const tx = await this.contractInstance.publishTip(
         utils.formatBytes32String(tipCode),
         tipMetadataHash,
         recipients.map((e) => {
           return utils.formatBytes32String(e);
         }),
-        { gasPrice: utils.bigNumberify(1000000000) }
+        { gasPrice }
       );
 
-      tx.wait().then((txReceipt) => {
-        if (txReceipt) {
-          this.unconfirmedTipsPublishmentCount--;
-        }
-      });
+      await tx.wait();
 
       return {
         tipId: tipsCounter.toNumber() + this.unconfirmedTipsPublishmentCount++,
