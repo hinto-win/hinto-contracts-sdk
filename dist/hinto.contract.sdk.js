@@ -58,7 +58,11 @@ class HintoSdk {
                 const tx = yield this.contractInstance.publishTip(ethers_1.utils.formatBytes32String(tipCode), tipMetadataHash, recipients.map((e) => {
                     return ethers_1.utils.formatBytes32String(e);
                 }), { gasPrice });
-                yield tx.wait();
+                tx.wait().then((txReceipt) => {
+                    if (txReceipt) {
+                        this.unconfirmedTipsPublishmentCount--;
+                    }
+                });
                 return {
                     tipId: tipsCounter.toNumber() + this.unconfirmedTipsPublishmentCount++,
                     txHash: tx.hash,
@@ -95,7 +99,7 @@ class HintoSdk {
                 };
             }
             catch (err) {
-                throw err;
+                return null;
             }
         });
     }

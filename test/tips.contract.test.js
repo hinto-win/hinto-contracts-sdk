@@ -11,16 +11,6 @@ describe("Hinto test", () => {
 
   const hintoSdk = new HintoSdk(providerUrl, contractAddress, privateKey);
 
-  it("should generate ABI", async () => {
-    const abiEncoded = await hintoSdk.encodeTransaction("approvePublisher", [
-      "0x91Fa9E366c4942241327081ec9faC73e409EE218",
-    ]);
-  });
-
-  it("should approve a publisher", async () => {
-    await hintoSdk.approvePublisher(hintoSdk.wallet.address);
-  });
-
   let tipID;
 
   it("should deploy a tip", async () => {
@@ -31,6 +21,7 @@ describe("Hinto test", () => {
     );
     tipID = tip.tipId;
     const publishmentTxHash = tip.txHash;
+    console.log(tip);
   });
 
   it("should get the number of tips", async () => {

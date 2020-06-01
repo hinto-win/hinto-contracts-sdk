@@ -14,6 +14,6 @@ export declare class HintoSdk {
         txHash: string;
     }>;
     encodeTransaction(functionName: string, args: string[]): Promise<Arrayish>;
-    getTipData(tipId: number): Promise<Tip>;
+    getTipData(tipId: number): Promise<Tip | null>;
     getTipsCount(): Promise<number>;
 }

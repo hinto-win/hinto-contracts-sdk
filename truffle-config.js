@@ -30,6 +30,11 @@ module.exports = {
       provider: () =>
         new HDWalletProvider(mnemonic, `https://core.poa.network`),
     },
+    sokol: {
+      provider: () =>
+        new HDWalletProvider(mnemonic, `https://sokol.poa.network`),
+      network_id: 77,
+    },
   },
   mocha: {
     // timeout: 100000

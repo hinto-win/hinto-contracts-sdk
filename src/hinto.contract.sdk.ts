@@ -81,11 +81,15 @@ export class HintoSdk {
         { gasPrice }
       );
 
-      const receipt = await tx.wait();
+      tx.wait().then((txReceipt) => {
+        if (txReceipt) {
+          this.unconfirmedTipsPublishmentCount--;
+        }
+      });
 
       return {
         tipId: tipsCounter.toNumber() + this.unconfirmedTipsPublishmentCount++,
-        txHash: receipt.transactionHash!,
+        txHash: tx.hash!,
       };
     } catch (err) {
       throw err;
@@ -105,7 +109,7 @@ export class HintoSdk {
     }
   }
 
-  async getTipData(tipId: number): Promise<Tip> {
+  async getTipData(tipId: number): Promise<Tip | null> {
     try {
       const tipData = await this.contractInstance.getTip(tipId);
 
@@ -121,7 +125,7 @@ export class HintoSdk {
         recipients,
       };
     } catch (err) {
-      throw err;
+      return null;
     }
   }
 
